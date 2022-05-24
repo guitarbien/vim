@@ -1,0 +1,105 @@
+"---------------------
+" cancel arrow
+"---------------------
+nnoremap <Left>  :echoe "Use h"<CR>
+nnoremap <Right> :echoe "Use l"<CR>
+nnoremap <Up>    :echoe "Use k"<CR>
+nnoremap <Down>  :echoe "Use j"<CR>
+
+"---------------------
+" color
+"---------------------
+colorscheme monokai
+
+"---------------------
+" syntax
+"---------------------
+syntax on
+filetype on
+filetype indent on
+filetype plugin on
+
+"---------------------
+" indent
+"---------------------
+set autoindent
+set expandtab
+set tabstop=4
+set softtabstop=4
+set shiftwidth=4
+
+"---------------------
+" search
+"---------------------
+set hlsearch
+set incsearch
+set ignorecase
+set smartcase
+
+"---------------------
+" appearance
+"---------------------
+set nu
+set rnu
+set cursorline
+set ruler
+set laststatus=2
+set showtabline=2
+set showcmd
+set showmode
+set splitbelow
+set splitright
+set scrolloff=3
+" 所在視窗才出現游標線
+autocmd WinEnter * setlocal cursorline
+autocmd WinLeave * setlocal nocursorline
+
+"---------------------
+" encoding
+"---------------------
+set fileencodings=utf-8,utf-16,big5,gb2312,gbk,gb18030,euc-jp,euc-kr,latin1
+set encoding=utf-8
+
+"---------------------
+" function
+"---------------------
+set clipboard=unnamed
+nnoremap vA ggVG
+nmap date i<C-R>=strftime("%Y-%m-%d %H:%M:%S")<CR><Esc>
+"imap date <C-R>=strftime("%Y-%m-%d %I:%M:%S")<CR>
+" 存檔去空白
+autocmd BufWritePre * :%s\s\+$//e
+
+"---------------------
+" plgin
+"---------------------
+call plug#begin('~/.vim/plugged')
+
+call plug#end()
+
+"---------------------
+" 修改狀態列
+"---------------------
+set statusline=[%{expand('%:p')}][%{strlen(&fenc)?&fenc:&enc},\ %{&ff},\ %{strlen(&filetype)?&filetype:'plain'}]%{FileSize()}%{IsBinary()}%=%c,%l/%L\ [%3p%%]
+
+function IsBinary()
+    if (&binary == 0)
+        return ""
+    else
+        return "[Binary]"
+    endif
+endfunction
+
+function FileSize()
+    let bytes = getfsize(expand("%:p"))
+    if bytes <= 0
+        return "[Empty]"
+    endif
+    if bytes < 1024
+        return "[" . bytes . "B]"
+    elseif bytes < 1048576
+        return "[" . (bytes / 1024) . "KB]"
+    else
+        return "[" . (bytes / 1048576) . "MB]"
+    endif
+endfunction
